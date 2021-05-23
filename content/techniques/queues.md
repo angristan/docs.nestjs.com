@@ -218,16 +218,15 @@ import { Job } from 'bull';
 @Processor('audio')
 export class AudioConsumer {
   @Process()
-  async transcode(job: Job<unknown>) {
+  async transcode(job: Job<unknown>): Promise<unknown> {
     let progress = 0;
-    for (i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i += 1) {
       await doSomething(job.data);
       progress += 10;
-      job.progress(progress);
+      await job.progress(progress);
     }
     return {};
   }
-}
 ```
 
 The decorated method (e.g., `transcode()`) is called whenever the worker is idle and there are jobs to process in the queue. This handler method receives the `job` object as its only argument. The value returned by the handler method is stored in the job object and can be accessed later on, for example in a listener for the completed event.
